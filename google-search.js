@@ -38,19 +38,21 @@ function $X (exp, context, resolver) {
 }
 
 function getGoogleElements (word) {
-     var [lang] = Cc['@mozilla.org/network/protocol;1?name=http']
-                            .getService(Ci.nsIHttpProtocolHandler)
-                            .language.split('-', 1);
+  try{
      var xhr = new XMLHttpRequest();
      var endpoint = 'http://www.google.co.jp/search';
-     var reqURL = endpoint + '?hl=' + lang + '&q=' + encodeURIComponent(word);
+     var reqURL = endpoint + '?q=' + encodeURIComponent(word);
      xhr.open('GET', reqURL, false);
      xhr.send(null);
 
      var div = window.content.document.createElement('div');
      div.innerHTML = xhr.responseText;
 
-     return $X('//div/ol/li/h3/a', div);
+     return $X('//h3/a', div);
+  }catch(e){
+    alert(e.message);
+    return [];
+  }
 }
 
 commands.addUserCommand(['gsearch'],
